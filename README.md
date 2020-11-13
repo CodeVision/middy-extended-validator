@@ -6,7 +6,7 @@ Middy middleware that extends the included [validator](https://github.com/middyj
 
 Adds:
 - Extended validation error messages (with details)
-- Allow mounting a json schema file under a `body` root property. This allow using the json schema file to server as schema for the actual request not just the request as received in a lambda function.
+- Allow mounting a JSON schema file under a `body` root property. This allow using the JSON schema file to server as schema for the actual request not just the request as received in a lambda function.
 
 ## Getting Started
 
@@ -56,13 +56,11 @@ The `mountSchemaAtBody` takes the inputSchema and mounts its properties under a 
 
 Allows using a schema such as:
 
-```
+```js
 const schema = {
   type: 'object',
   properties: {
-    foo: {
-      type: 'string'
-    }
+    foo: { type: 'string' }
   },
   required: ['foo'],
 }
@@ -70,16 +68,13 @@ const schema = {
 
 and turns it into this:
 
-```
-
+```js
 const schema = {
   type: 'object',
   properties: {
     body: { type: 'object' },
     properties: {
-      foo: {
-        type: 'string'
-      }
+      foo: { type: 'string' }
     }
     required: ['foo'],
   },
