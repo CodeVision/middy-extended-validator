@@ -1,5 +1,7 @@
 # middy-extended-validator
 
+![version](https://img.shields.io/npm/v/middy-extended-validator) ![downloads](https://img.shields.io/npm/dm/middy-extended-validator)
+
 Middy middleware that extends the included [validator](https://github.com/middyjs/middy/blob/master/packages/validator) middleware.
 
 Adds:
