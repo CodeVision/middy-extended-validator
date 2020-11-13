@@ -33,7 +33,7 @@ const handler = async event => {
   // do something with event.body...
 
   const statusCode = 200;
-  const body = JSON.stringify('yay!')
+  const body = JSON.stringify({ message: 'something' })
   return {
     statusCode,
     body,
@@ -42,7 +42,7 @@ const handler = async event => {
 
 module.exports.handler = middy(handler)
   .use(jsonBodyParser())
-  .use(validator({ inputSchema: schema, mountSchemaAtBody: true }))
+  .use(validator({ inputSchema: schema, mountSchemaAtBody: true, detailedErrors: true }))
   .use(httpErrorHandler());
 ```
 
