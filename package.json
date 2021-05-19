@@ -36,6 +36,6 @@
     "*.js": "eslint --cache --fix"
   },
   "dependencies": {
-    "@middy/validator": "^1.4.0"
+    "@middy/validator": "^2.2.0"
   }
 }
