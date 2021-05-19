@@ -1,6 +1,6 @@
 {
   "name": "middy-extended-validator",
-  "version": "0.1.4",
+  "version": "2.0.0",
   "description": "Extended validator for Middy",
   "main": "src/index.js",
   "scripts": {
@@ -36,6 +36,6 @@
     "*.js": "eslint --cache --fix"
   },
   "dependencies": {
-    "@middy/validator": "^1.4.0"
+    "@middy/validator": "^2.2.0"
   }
 }
