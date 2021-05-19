@@ -39,7 +39,7 @@ const validator = options => {
 
   const validatorObject = baseValidator(options);
   if (detailedErrors) {
-    validatorObject.onError = (handler, next) => {
+    validatorObject.onError = handler => {
       if (handler.error.name === 'BadRequestError') {
         const detailedMessage = {
           message: handler.error.message,
@@ -53,8 +53,6 @@ const validator = options => {
         }
         handler.error.message = JSON.stringify(detailedMessage);
       }
-
-      return next(handler.error);
     };
   }
 
