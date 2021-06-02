@@ -2,7 +2,7 @@
 
 ![version](https://img.shields.io/npm/v/middy-extended-validator) ![downloads](https://img.shields.io/npm/dm/middy-extended-validator)
 
-Middy middleware that extends the included [validator](https://github.com/middyjs/middy/blob/master/packages/validator) middleware.
+Middy 2.0+ middleware that extends the included [validator](https://github.com/middyjs/middy/blob/master/packages/validator) middleware.
 
 Adds:
 - Extended validation error messages (with details)

@@ -43,17 +43,19 @@ const extendedValidatorMiddleWare = options => {
   if (detailedErrors) {
     validatorObject.onError = request => {
       if (request.error.name === 'BadRequestError') {
-        const detailedMessage = {
-          message: request.error.message,
-          details: request.error.details.map(detail => {
-            const transformedPath = transformPath(detail.instancePath, { mountSchemaAtBody });
-            return transformedPath ? `${transformedPath} ${detail.message}` : detail.message;
-          }),
-        };
-        if (detailedMessage.details.length === 1) {
-          detailedMessage.details = detailedMessage.details[0];
+        if (Array.isArray(request.error.details)) {
+          const detailedMessage = {
+            message: request.error.message,
+            details: request.error.details.map(detail => {
+              const transformedPath = transformPath(detail.instancePath, { mountSchemaAtBody });
+              return transformedPath ? `${transformedPath} ${detail.message}` : detail.message;
+            }),
+          };
+          if (detailedMessage.details.length === 1) {
+            detailedMessage.details = detailedMessage.details[0];
+          }
+          request.error.message = JSON.stringify(detailedMessage);
         }
-        request.error.message = JSON.stringify(detailedMessage);
       }
     };
   }
