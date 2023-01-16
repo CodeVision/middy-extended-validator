@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/CodeVision/middy-extended-validator#readme",
   "devDependencies": {
-    "eslint": "^7.13.0",
+    "eslint": "^8.32.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0"
   },
