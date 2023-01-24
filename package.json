@@ -25,6 +25,7 @@
   "homepage": "https://github.com/CodeVision/middy-extended-validator#readme",
   "devDependencies": {
     "eslint": "^8.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0"
   },
