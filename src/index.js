@@ -1,20 +1,45 @@
-'use strict';
-
 const baseValidator = require('@middy/validator');
+const { transpileSchema } = require('@middy/validator/transpile');
 
-
-const bodyMount = schema => ({
-  type: 'object', properties: {
-    body: {
-      type: 'object',
-      properties: schema.properties,
-      required: schema.required,
+const copyFields = [
+  'properties',
+  'required',
+  'allOf',
+];
+const mount = schema => {
+  const inputSchema = {
+    type: 'object',
+    properties: {
+      body: {
+        type: 'object',
+        required: schema.required,
+      },
     },
-  },
-  required: ['body'],
-});
+    required: ['body'],
+  };
+  const { body } = inputSchema.properties;
+  for (const copyField of copyFields) {
+    if (schema[copyField]) {
+      body[copyField] = schema[copyField];
+    }
+  }
+  if (schema.$defs) {
+    inputSchema.$defs = schema.$defs;
+  }
 
-const transformPath = (instancePath, { mountSchemaAtBody }) => {
+  return inputSchema;
+};
+
+const transpile = (schema, mountSchemaAtBody = false) => {
+  let inputSchema = schema;
+  if (mountSchemaAtBody) {
+    inputSchema = mount(schema);
+  }
+
+  return transpileSchema(inputSchema, { strictRequired: false });
+};
+
+const transformPath = (instancePath, { mountSchemaAtBody } = {}) => {
   // transform instancePath from '/body/something' to '.body.something' or
   // just '.something' (if body was inserted previously)
   let sliceIndex = 0;
@@ -29,30 +54,23 @@ const transformPath = (instancePath, { mountSchemaAtBody }) => {
   return instancePath.slice(sliceIndex).replace(/\//g, '.');
 };
 
-const extendedValidatorMiddleWare = options => {
-  const { mountSchemaAtBody, detailedErrors } = options;
+const validator = options => {
+  const { detailedErrors } = options;
 
-  if (mountSchemaAtBody) {
-    options.inputSchema = bodyMount(options.inputSchema);
-  }
-
-  if (!options.ajvOptions) {
-    options.ajvOptions = { strict: false, ...options.ajvOptions };
-  }
   const validatorObject = baseValidator(options);
   if (detailedErrors) {
     validatorObject.onError = request => {
       if (request.error.name === 'BadRequestError') {
-        if (Array.isArray(request.error.details)) {
+        if (Array.isArray(request.error.cause)) {
           const detailedMessage = {
             message: request.error.message,
-            details: request.error.details.map(detail => {
-              const transformedPath = transformPath(detail.instancePath, { mountSchemaAtBody });
-              return transformedPath ? `${transformedPath} ${detail.message}` : detail.message;
+            details: request.error.cause.map(cause => {
+              const transformedPath = transformPath(cause.instancePath);
+              return transformedPath ? `${transformedPath} ${cause.message}` : cause.message;
             }),
           };
           if (detailedMessage.details.length === 1) {
-            detailedMessage.details = detailedMessage.details[0];
+            [detailedMessage.details] = detailedMessage.details;
           }
           request.error.message = JSON.stringify(detailedMessage);
         }
@@ -63,4 +81,7 @@ const extendedValidatorMiddleWare = options => {
   return validatorObject;
 };
 
-module.exports = extendedValidatorMiddleWare;
+module.exports = {
+  validator,
+  transpile,
+};
