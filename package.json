@@ -1,7 +1,8 @@
 {
   "name": "middy-extended-validator",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Extended validator for Middy",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint $(ls | grep -e \"src\\|scripts\\|tests\")",
