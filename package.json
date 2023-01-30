@@ -1,6 +1,6 @@
 {
   "name": "middy-extended-validator",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Extended validator for Middy",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
