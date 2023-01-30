@@ -24,7 +24,7 @@ npm install --save middy-extended-validator
 const middy = require('@middy/core');
 const httpErrorHandler = require('@middy/http-error-handler');
 const jsonBodyParser = require('@middy/http-json-body-parser');
-const validator = require('middy-extended-validator');
+const { transpile, validator } = require('middy-extended-validator');
 
 const schema = require('some-json-schema.json');
 
@@ -42,7 +42,10 @@ const handler = async event => {
 
 module.exports.handler = middy(handler)
   .use(jsonBodyParser())
-  .use(validator({ inputSchema: schema, mountSchemaAtBody: true, detailedErrors: true }))
+  .use(validator({
+    eventSchema: transpile(schema, true /* mount schema at body */),
+    detailedErrors: true
+  }))
   .use(httpErrorHandler());
 ```
 
