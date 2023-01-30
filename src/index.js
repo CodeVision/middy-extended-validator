@@ -39,18 +39,9 @@ const transpile = (schema, mountSchemaAtBody = false) => {
   return transpileSchema(inputSchema, { strictRequired: false });
 };
 
-const transformPath = (instancePath, { mountSchemaAtBody } = {}) => {
-  // transform instancePath from '/body/something' to '.body.something' or
-  // just '.something' (if body was inserted previously)
-  let sliceIndex = 0;
-  if (mountSchemaAtBody) {
-    const slashIndex = instancePath.indexOf('/', 2);
-    if (slashIndex >= 0) {
-      sliceIndex = slashIndex;
-    } else {
-      sliceIndex = instancePath.length;
-    }
-  }
+const transformPath = instancePath => {
+  // transform instancePath from '/body/something' to '.body.something'
+  const sliceIndex = 0;
   return instancePath.slice(sliceIndex).replace(/\//g, '.');
 };
 
