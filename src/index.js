@@ -39,14 +39,17 @@ const transpile = (schema, mountSchemaAtBody = false) => {
   return transpileSchema(inputSchema, { strictRequired: false });
 };
 
-const transformPath = instancePath => {
+const transformPath = (instancePath, stripBody) => {
   // transform instancePath from '/body/something' to '.body.something'
-  const sliceIndex = 0;
+  let sliceIndex = 0;
+  if (stripBody) {
+    sliceIndex = 5;
+  }
   return instancePath.slice(sliceIndex).replace(/\//g, '.');
 };
 
 const validator = options => {
-  const { detailedErrors } = options;
+  const { detailedErrors, stripBody } = options;
 
   const validatorObject = baseValidator(options);
   if (detailedErrors) {
@@ -56,7 +59,7 @@ const validator = options => {
           const detailedMessage = {
             message: request.error.message,
             details: request.error.cause.map(cause => {
-              const transformedPath = transformPath(cause.instancePath);
+              const transformedPath = transformPath(cause.instancePath, stripBody);
               return transformedPath ? `${transformedPath} ${cause.message}` : cause.message;
             }),
           };
